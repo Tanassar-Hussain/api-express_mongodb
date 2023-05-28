@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const registerController = {
 
-    register(req , res , next){
+    async register(req , res , next){
  
         res.json({msg:'Hello'})
 
@@ -16,8 +16,12 @@ const registerController = {
 
 
         const { error } = registerSchema.validate(req.body);
+
+        if(error){
+            return next(error);
+        }
     }
-}
+}   
 
 
 
