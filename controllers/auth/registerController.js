@@ -31,7 +31,7 @@ const registerController = {
                 return next(CustomErrorHandler.alreadyExist('This Email is alredy exist...')); //it return instance/object of custom error handler
             }
         }catch(err){
-
+            return next(err);
         }
 
         res.json({msg:'Hello from express'})

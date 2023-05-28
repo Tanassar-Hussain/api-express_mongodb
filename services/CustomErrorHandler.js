@@ -9,7 +9,7 @@ class CustomErrorHandler extends Error {
 
 
     static alreadyExist(message) {
-        return new CustomErrorHandler(409, message); //return object of same class
+        return new CustomErrorHandler(409, message); //return object of same class to middleware errorHandler
     }
 }
 
