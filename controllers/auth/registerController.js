@@ -1,8 +1,9 @@
 import Joi from "joi";
+import CustomErrorHandler from "../../services/CustomErrorHandler";
 
 const registerController = {
 
-    register(req , res , next){
+    async register(req , res , next){
  
  
 
@@ -19,6 +20,18 @@ const registerController = {
 
         if(error){
             return next(error);
+        }
+
+        // check if user is in the database already
+
+        try{
+            const exist = await User.exists({email: req.body.email});
+            if(exist)
+            {
+                return next(CustomErrorHandler.alreadyExist('This Email is alredy exist...')); //it return instance/object of custom error handler
+            }
+        }catch(err){
+
         }
 
         res.json({msg:'Hello from express'})
