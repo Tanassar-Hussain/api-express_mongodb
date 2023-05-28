@@ -2,9 +2,9 @@ import Joi from "joi";
 
 const registerController = {
 
-    async register(req , res , next){
+    register(req , res , next){
  
-        res.json({msg:'Hello'})
+ 
 
         //Validation
         const registerSchema = Joi.object({
@@ -20,6 +20,8 @@ const registerController = {
         if(error){
             return next(error);
         }
+
+        res.json({msg:'Hello from express'})
     }
 }   
 

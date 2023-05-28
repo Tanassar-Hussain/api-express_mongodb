@@ -11,11 +11,16 @@ const errorHandler = (err , req , res , next) =>{
     }
 
     if(err instanceof ValidationError){ //its is related to joi from controller validation
-
+        statusCode = 422;
+        data ={
+            message: err.message
+        }
     }
+
+    return res.status(statusCode).json(data);
 }
 
 
 
 
-export default errorHandler;
+export default errorHandler; 
