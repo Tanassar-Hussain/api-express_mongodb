@@ -1,4 +1,6 @@
 import Joi from "joi";
+//import { User } from '../../models';
+ 
 import CustomErrorHandler from "../../services/CustomErrorHandler";
 
 const registerController = {
