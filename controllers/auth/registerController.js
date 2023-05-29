@@ -37,28 +37,25 @@ const registerController = {
             return next(err);
         }
 
-
-        //Hash Password
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        
-        //prepare the model
-
         const {name, email, password} = req.body;
 
-        const user = {
+        //Hash Password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        //prepare the model
+        const user = new User({
             name: name,
             email: email,
             password: hashedPassword
-        }
+        })
 
         let access_token;
 
         try{
-            const result = await User.save();
+            const result = await user.save();
             console.log(result);
 
             // Token
-
             access_token = JwtService.sign({_id: result._id, role: result.role})
 
         } catch(err){
@@ -68,7 +65,4 @@ const registerController = {
         res.json({access_token: access_token})
     }
 }   
-
-
-
 export default registerController;
