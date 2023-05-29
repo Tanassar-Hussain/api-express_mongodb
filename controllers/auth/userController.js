@@ -7,7 +7,7 @@ const userController = {
 
         try {
 
-            const user = await User.findOne({_id: req.user._id });
+            const user = await User.findOne({_id: req.user._id }).select('-password -updatedAt -__v');
 
             if(!user) {
 
