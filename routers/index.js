@@ -1,6 +1,7 @@
 import express from 'express';
 import { loginController, registerController, userController, refreshController, productController } from '../controllers';
 import auth from '../middlewares/auth';
+import admin from '../middlewares/admin';
 
 const router = express.Router();
 
@@ -12,7 +13,8 @@ router.post('/refresh' , refreshController.refresh);
 router.post('/logout' ,auth, loginController.logout);
 
 
-router.post('/products' , productController.store)
+router.post('/products' , [auth, admin], productController.store)
+// router.put('/products' , productController.store)
 
 
 
