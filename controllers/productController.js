@@ -25,6 +25,8 @@ const productController = {
             }
 
             const filePath = req.file.path;
+            filePath.replace("'\'", "'/'")
+    
     
             const { error } = productSchema.validate(req.body); 
 
