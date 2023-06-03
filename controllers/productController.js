@@ -1,9 +1,9 @@
 import multer from "multer";
 import path from 'path';
 import CustomErrorHandler from "../services/CustomErrorHandler";
-import Joi from "joi";
 import fs from 'fs'
 import { Product } from "../models";
+import productSchema from "../validators/productValidator";
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => callback(null, 'uploads/'), //null for error
@@ -25,13 +25,6 @@ const productController = {
             }
 
             const filePath = req.file.path;
-
-            //Validation
-            const productSchema = Joi.object({
-                name: Joi.string().required(),
-                price: Joi.number().required(),
-                size: Joi.string().required()
-            });
     
             const { error } = productSchema.validate(req.body); 
 
@@ -62,7 +55,71 @@ const productController = {
             res.status(201).json(document);
         });
  
+    },
+
+    update(req, res, next){
+
+        handleMultipartData(req, res, async (err)=> {
+            if(err) {
+                return next(CustomErrorHandler.serverError(err.message)); 
+            }
+            let filePath
+            if(req.fle) {
+                filePath = req.file.path;
+            }
+    
+            const { error } = productSchema.validate(req.body); 
+
+            if(error) {
+                //Delete the uploaded file
+                //rootFolder/uploads/filename
+
+                if(req.file){
+                    fs.unlink(`${appRoot}/${filePath}`, (err)=>{
+                        if(err) {
+                            return next(CustomErrorHandler.serverError(err.message)); 
+                        }
+    
+                    });
+                }
+
+                return next(error);
+            }
+            const {name , price, size} = req.body;
+            console.log(req.body)
+            let document;
+
+            try {
+                document = await Product.findOneAndUpdate({ _id: req.params.id} , {
+                    name: name,
+                    price: price,
+                    size: size,
+                    ...(req.file && {image: filePath})
+                },{new: true});
+            } catch (err) {
+                return next(err);
+            }
+            res.status(201).json(document);
+        });
+
+    },
+
+    async destroy(req, res, next){
+        const document = await Product.findByIdAndRemove({_id: req.params.id});
+        if(!document){
+            return next(new Error('Nothing to Delete'));
+        }
+        // image delete
+        const imagePath = document.image;
+        fs.unlink(`${appRoot}/${imagePath}`,(err)=>{
+            if(err){
+                return next(CustomErrorHandler.serverError());
+            }
+        });
+
+        res.json(document);
     }
+
 }
 
 
