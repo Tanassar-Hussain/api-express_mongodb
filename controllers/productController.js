@@ -118,8 +118,20 @@ const productController = {
         });
 
         res.json(document);
-    }
+    },
 
+    async index(req, res, next){
+        let documents;
+        //pagination mongoose-pagination
+
+        try {                         //method chaining               //sort in desending order with id if u want with createdAt put here that..
+            documents = await Product.find().select('-updatedAt -__v').sort({_id: -1}); //find if limited data if in thousands than use pagination. 
+        } catch (err) {
+            return next(CustomErrorHandler.serverError());
+        }
+
+        return res.json(documents);
+    }
 }
 
 
