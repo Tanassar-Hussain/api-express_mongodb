@@ -19,7 +19,7 @@ global.appRoot = path.resolve(__dirname);
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use('/api',routes);
-app.use('/uploads', express.static())
+app.use('/uploads', express.static('uploads'))
 
 
 

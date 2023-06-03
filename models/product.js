@@ -9,10 +9,11 @@ const productSchema = new Schema({
     size: { type: String, required: true},
     image: { type: String, required: true, get: (image)=>{
         //Add domain name with image so it can be get from any server
+
         return `${APP_URL}/${image}`
     }},
      
-}, {timestamps: true, toJSON: {getters: true}});
+}, {timestamps: true, toJSON: {getters: true}, id:false });
 
 
 
